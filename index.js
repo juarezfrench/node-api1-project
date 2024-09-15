@@ -5,7 +5,7 @@ const server = express();
 server.use(express.json());
 
 server.get("/", (req, res) => {
-  res.send({ api: "up and running..." });
+  res.send({ api: "up and running,yo..." });
 });
 
 ///GET///
@@ -24,28 +24,26 @@ server.get("/users", (req, res) => {
     });
 });
 
-server.get('/users/:id', (req, res) => {
-    const id = req.params.id;
+server.get("/users/:id", (req, res) => {
+  const id = req.params.id;
 
-    db 
-        .findById(id)
-        .then(user => {
-          if (user) {
-          res.status(200).json(user); 
-                
-            } else {
-              res.status(404).json({ 
-                message: 'No such user exists'
-            })
-          }})
-       
-        .catch(err => res.status(500).json({
-            error: 'User info could not be retrieved, please try again'
-        }))
-      
-})
+  db.findById(id)
+    .then(user => {
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({
+          message: "No such user exists"
+        });
+      }
+    })
 
-
+    .catch(err =>
+      res.status(500).json({
+        error: "User info could not be retrieved, please try again"
+      })
+    );
+});
 
 server.post("/users", (req, res) => {
   const userData = req.body;
@@ -89,25 +87,25 @@ server.delete("/users/:id", (req, res) => {
 
 ///PUT///
 
-server.put('/users/:id', (req, res) => {
+server.put("/users/:id", (req, res) => {
   const userData = req.body;
-  const id=req.params.id
+  const id = req.params.id;
 
   db.update(id, userData)
-  .then(user => {
-    if (user) {
-      res.status(200).json(user);
-    } else {
-      res.status(404).json({ message: 'The user could not be found' });
-    }
-  })
-  .catch(error => {
-    // log error to database
-    console.log(error);
-    res.status(500).json({
-      message: 'Error updating the user',
+    .then(user => {
+      if (user) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).json({ message: "The user could not be found" });
+      }
+    })
+    .catch(error => {
+      // log error to database
+      console.log(error);
+      res.status(500).json({
+        message: "Error updating the user"
+      });
     });
-  });
 });
 
 const port = 4000;
